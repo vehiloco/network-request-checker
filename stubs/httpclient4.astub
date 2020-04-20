@@ -1,0 +1,8 @@
+import org.checkerframework.checker.networkrequest.qual.NetworkRequest;
+
+package org.apache.http.client.methods;
+
+class HttpGet {
+	public @NetworkRequest({"URL"}) HttpGet(String uri);
+	public @NetworkRequest({"URI"}) HttpGet(URI uri);
+}

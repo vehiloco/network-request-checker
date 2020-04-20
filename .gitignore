@@ -1,0 +1,13 @@
+# Generated files
+.gradle
+build
+
+# IntelliJ
+.idea
+*.iml
+
+# Emacs backups
+*~
+
+# checker-qual
+network-request-checker-qual/src

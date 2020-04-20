@@ -1,0 +1,15 @@
+import org.checkerframework.checker.networkrequest.qual.NetworkRequest;
+
+package org.springframework.web.client;
+
+class RestTemplate {
+	public <T> @NetworkRequest({"URL", "SKIP", "SKIP", "SKIP", "SKIP"}) ResponseEntity<T> exchange(String url,
+										HttpMethod method,
+										HttpEntity<?> requestEntity,
+										Class<T> responseType,
+										Map<String,?> uriVariables);
+	public <T> @NetworkRequest({"URI", "SKIP", "SKIP", "SKIP"}) ResponseEntity<T> exchange(URI url,
+										HttpMethod method,
+										HttpEntity<?> requestEntity,
+										Class<T> responseType);
+}

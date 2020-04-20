@@ -1,0 +1,23 @@
+import org.checkerframework.checker.networkrequest.qual.NetworkRequest;
+
+package java.net;
+
+class URL {
+	public @NetworkRequest({"URL"}) URL(String spec);
+	public @NetworkRequest({"PROTOCOL", "HOST", "PORT", "FILE"}) URL(String protocol, String host, int port, String file);
+	public @NetworkRequest({"PROTOCOL", "HOST", "PORT", "FILE", "SKIP"}) URL(String protocol, String host, int port, String file, URLStreamHandler handler);
+	public @NetworkRequest({"PROTOCOL", "HOST", "FILE"}) URL(String protocol, String host, String file);
+	public @NetworkRequest({"BASEURL", "RELATIVEURL"}) URL(URL context, String spec);
+	public @NetworkRequest({"BASEURL", "RELATIVEURL", "SKIP"}) URL(URL context, String spec, URLStreamHandler handler);
+}
+
+class URI {
+public @NetworkRequest({"URL"}) URI(String str);
+public @NetworkRequest({"SKIP", "SKIP", "HOST", "PORT", "SKIP", "SKIP", "SKIP"}) URI(String scheme, String userInfo, String host, int port, String path, String query, String fragment);
+// TODO How we handle all the parameters?
+public @NetworkRequest() URI(String scheme, String authority, String path, String query, String fragment);
+public @NetworkRequest() URI(String scheme, String host, String path, String fragment);
+public @NetworkRequest() URI(String scheme, String ssp, String fragment);
+public static @NetworkRequest({"URL"}) URI create(String str);
+public @NetworkRequest({"URL"}) URI resolve(String str);
+}
