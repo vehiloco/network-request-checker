@@ -9,3 +9,4 @@
 
 rootProject.name = 'network-request-checker'
 include 'network-request-checker-qual'
+include 'network-request-checker-qual-android'
