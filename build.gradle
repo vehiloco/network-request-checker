@@ -14,6 +14,8 @@ repositories {
 configurations {
 	// for putting Error Prone javac in bootclasspath for running tests
 	errorproneJavac
+	// local dependency
+	localDeps
 }
 
 ext.versions = [
@@ -28,12 +30,13 @@ dependencies {
 	// This dependency is found on compile classpath of this component and consumers.
 	if (checkerframework_local) {
 		implementation files("${CHECKERFRAMEWORK}/checker/dist/checker-qual.jar")
-		implementation files("${CHECKERFRAMEWORK}/checker/dist/checker.jar")
+		localDeps files("${CHECKERFRAMEWORK}/checker/dist/checker.jar")
 		implementation files("${CHECKERFRAMEWORK}/checker/dist/jdk8.jar")
 	}
 	else {
-		implementation "org.checkerframework:checker:${versions.checkerFramework}"
+		localDeps "org.checkerframework:checker:${versions.checkerFramework}"
 	}
+	implementation configurations.localDeps
 
 	compileOnly "com.google.errorprone:javac:9+181-r4173-1"
 
@@ -144,4 +147,9 @@ clean.doFirst {
 test.doLast {
 	delete "${rootDir}/tests/build/",
 			fileTree("tests/") { include "**/*.class" }
+}
+
+task copyDependencies(type: Copy) {
+	from configurations.localDeps
+	into "$buildDir/libs"
 }
