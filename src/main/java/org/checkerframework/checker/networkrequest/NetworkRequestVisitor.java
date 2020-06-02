@@ -16,7 +16,6 @@ import org.checkerframework.common.value.ValueAnnotatedTypeFactory;
 import org.checkerframework.common.value.ValueChecker;
 import org.checkerframework.common.value.qual.IntVal;
 import org.checkerframework.common.value.qual.StringVal;
-import org.checkerframework.framework.source.Result;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedDeclaredType;
 import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedExecutableType;
@@ -67,19 +66,17 @@ public class NetworkRequestVisitor extends BaseTypeVisitor<NetworkRequestAnnotat
             List<? extends ExpressionTree> trees = node.getArguments();
             List<String> res = performNetworkRequestChecking(networkAnnoMirror, trees);
             if (overriddenMethod != null) {
-                checker.report(
-                        Result.failure(
-                                "network.request.found.in.method.invocation",
-                                String.join(" | ", res),
-                                overriddenMethod),
-                        node);
+                checker.reportError(
+                        node,
+                        "network.request.found.in.method.invocation",
+                        String.join(" | ", res),
+                        overriddenMethod);
             } else {
-                checker.report(
-                        Result.failure(
-                                "network.request.found.in.method.invocation",
-                                String.join(" | ", res),
-                                null),
-                        node);
+                checker.reportError(
+                        node,
+                        "network.request.found.in.method.invocation",
+                        String.join(" | ", res),
+                        null);
             }
         }
         return super.visitMethodInvocation(node, p);
@@ -96,8 +93,7 @@ public class NetworkRequestVisitor extends BaseTypeVisitor<NetworkRequestAnnotat
         if (networkAnnoMirror != null) {
             List<? extends ExpressionTree> trees = newClassTree.getArguments();
             List<String> res = performNetworkRequestChecking(networkAnnoMirror, trees);
-            checker.report(
-                    Result.failure("network.request.found", String.join(" | ", res)), newClassTree);
+            checker.reportError(newClassTree, "network.request.found", String.join(" | ", res));
         }
         super.checkConstructorInvocation(invocation, constructor, newClassTree);
     }
