@@ -7,7 +7,7 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.checkerframework:checker:3.4.1'
+	implementation 'io.github.eisop:checker:3.21.3-eisop1'
 }
 
 task copySources(type: Copy) {
