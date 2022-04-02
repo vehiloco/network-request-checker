@@ -19,7 +19,7 @@ configurations {
 }
 
 ext.versions = [
-		checkerFramework: "3.4.1",
+	checkerFramework: "3.21.3-eisop1",
 ]
 
 
@@ -34,7 +34,7 @@ dependencies {
 		implementation files("${CHECKERFRAMEWORK}/checker/dist/jdk8.jar")
 	}
 	else {
-		localDeps "org.checkerframework:checker:${versions.checkerFramework}"
+		localDeps "io.github.eisop:checker:${versions.checkerFramework}"
 	}
 	implementation configurations.localDeps
 
@@ -42,7 +42,7 @@ dependencies {
 
 	// Testing
 	testImplementation "junit:junit:4.13"
-	testCompile "org.checkerframework:framework-test:${versions.checkerFramework}"
+	testCompile "io.github.eisop:framework-test:${versions.checkerFramework}"
 	testCompile "org.apache.httpcomponents:httpclient:4.5.2"
 	testCompile "org.springframework:spring-web:5.2.4.RELEASE"
 
@@ -90,7 +90,7 @@ spotless {
 publishing {
 	publications {
 		maven(MavenPublication) {
-			groupId = "org.checkerframework"
+			groupId = "io.github.eisop"
 			artifactId = "network-request-checker"
 			version = "0.1-SNAPSHOT"
 
