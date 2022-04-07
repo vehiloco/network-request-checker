@@ -11,8 +11,8 @@ ext.versions = [
 ]
 
 dependencies {
-	implementation 'io.github.eisop:checker:${versions.checkerFramework}'
-	implementation 'io.github.eisop:checker-qual:${versions.checkerFramework}'
+	implementation "io.github.eisop:checker:${versions.checkerFramework}"
+	implementation "io.github.eisop:checker-qual:${versions.checkerFramework}"
 }
 
 task copySources(type: Copy) {
