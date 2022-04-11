@@ -1,15 +1,11 @@
 package org.checkerframework.checker.networkrequest;
 
-import java.util.List;
-import javax.lang.model.element.AnnotationMirror;
-import org.checkerframework.checker.networkrequest.qual.NetworkRequest;
-import org.checkerframework.checker.networkrequest.qual.NetworkRequestDummy;
+import java.lang.annotation.Annotation;
+import java.util.Collection;
 import org.checkerframework.common.basetype.BaseAnnotatedTypeFactory;
 import org.checkerframework.common.basetype.BaseTypeChecker;
 import org.checkerframework.framework.type.QualifierHierarchy;
-import org.checkerframework.framework.util.MultiGraphQualifierHierarchy;
-import org.checkerframework.framework.util.MultiGraphQualifierHierarchy.MultiGraphFactory;
-import org.checkerframework.javacutil.AnnotationUtils;
+import org.checkerframework.framework.type.SubtypeIsSubsetQualifierHierarchy;
 
 public class NetworkRequestAnnotatedTypeFactory extends BaseAnnotatedTypeFactory {
 
@@ -19,35 +15,19 @@ public class NetworkRequestAnnotatedTypeFactory extends BaseAnnotatedTypeFactory
     }
 
     @Override
-    public QualifierHierarchy createQualifierHierarchy(MultiGraphFactory factory) {
-        return new NetworkRequestQualifierHierarchy(factory);
+    public QualifierHierarchy createQualifierHierarchy() {
+        return new NetworkRequestQualifierHierarchy(this.getSupportedTypeQualifiers());
     }
 
-    protected static class NetworkRequestQualifierHierarchy extends MultiGraphQualifierHierarchy {
-        public NetworkRequestQualifierHierarchy(MultiGraphFactory f) {
-            super(f);
-        }
-
-        @Override
-        public boolean isSubtype(AnnotationMirror subAnno, AnnotationMirror superAnno) {
-            if (AnnotationUtils.areSameByClass(subAnno, NetworkRequestDummy.class)
-                    && AnnotationUtils.areSameByClass(superAnno, NetworkRequestDummy.class)) {
-                return true;
-            } else if (AnnotationUtils.areSameByClass(subAnno, NetworkRequest.class)
-                    && AnnotationUtils.areSameByClass(superAnno, NetworkRequest.class)) {
-                return compareNetworkRequestTypes(subAnno, superAnno);
-            } else {
-                return false;
-            }
-        }
-
-        private boolean compareNetworkRequestTypes(
-                AnnotationMirror subAnno, AnnotationMirror superAnno) {
-            List<String> subTypeValueList =
-                    AnnotationUtils.getElementValueArray(subAnno, "value", String.class, true);
-            List<String> superTypeValueList =
-                    AnnotationUtils.getElementValueArray(superAnno, "value", String.class, true);
-            return superTypeValueList.containsAll(subTypeValueList);
+    private final class NetworkRequestQualifierHierarchy extends SubtypeIsSubsetQualifierHierarchy {
+        /**
+         * Creates a NetworkRequestQualifierHierarchy from the given classes.
+         *
+         * @param qualifierClasses classes of annotations that are the qualifiers for this hierarchy
+         */
+        public NetworkRequestQualifierHierarchy(
+                Collection<Class<? extends Annotation>> qualifierClasses) {
+            super(qualifierClasses, processingEnv);
         }
     }
 }

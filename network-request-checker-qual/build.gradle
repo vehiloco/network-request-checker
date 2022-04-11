@@ -6,8 +6,13 @@ repositories {
 	jcenter()
 }
 
+ext.versions = [
+	checkerFramework: "3.21.4-eisop1",
+]
+
 dependencies {
-	implementation 'org.checkerframework:checker:3.4.1'
+	implementation "io.github.eisop:checker:${versions.checkerFramework}"
+	implementation "io.github.eisop:checker-qual:${versions.checkerFramework}"
 }
 
 task copySources(type: Copy) {

@@ -6,6 +6,7 @@ import com.sun.source.tree.NewClassTree;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
@@ -25,6 +26,17 @@ import org.checkerframework.javacutil.TreeUtils;
 
 public class NetworkRequestVisitor extends BaseTypeVisitor<NetworkRequestAnnotatedTypeFactory> {
 
+    protected final ProcessingEnvironment env;
+
+    /** The {@link StringVal#value} element/argument. */
+    protected final ExecutableElement stringValValueElement;
+
+    /** The {@link IntVal#value} element/argument. */
+    protected final ExecutableElement intValValueElement;
+
+    /** The {@link NetworkRequest#value} element/argument. */
+    protected final ExecutableElement networkRequestValueElement;
+
     enum ArgumentType {
         URL,
         URI,
@@ -39,6 +51,10 @@ public class NetworkRequestVisitor extends BaseTypeVisitor<NetworkRequestAnnotat
 
     public NetworkRequestVisitor(final BaseTypeChecker checker) {
         super(checker);
+        env = checker.getProcessingEnvironment();
+        stringValValueElement = TreeUtils.getMethod(StringVal.class, "value", 0, env);
+        intValValueElement = TreeUtils.getMethod(IntVal.class, "value", 0, env);
+        networkRequestValueElement = TreeUtils.getMethod(NetworkRequest.class, "value", 0, env);
     }
 
     @Override
@@ -107,7 +123,7 @@ public class NetworkRequestVisitor extends BaseTypeVisitor<NetworkRequestAnnotat
         ValueAnnotatedTypeFactory valueATF = getValueAnnotatedTypeFactory();
         List<String> argumentTypesList =
                 AnnotationUtils.getElementValueArray(
-                        networkAnnoMirror, "value", String.class, true);
+                        networkAnnoMirror, networkRequestValueElement, String.class);
         int argumentListLength = argumentTypesList.size();
         assert argumentListLength == trees.size();
         List<String> res = new ArrayList<>();
@@ -126,7 +142,9 @@ public class NetworkRequestVisitor extends BaseTypeVisitor<NetworkRequestAnnotat
                     if (stringValAnnoMirror != null) {
                         String stringValue =
                                 AnnotationUtils.getElementValueArray(
-                                                stringValAnnoMirror, "value", String.class, true)
+                                                stringValAnnoMirror,
+                                                stringValValueElement,
+                                                String.class)
                                         .get(0);
                         res.add(String.format("%s: %s", argumentType, stringValue));
                     } else {
@@ -137,7 +155,7 @@ public class NetworkRequestVisitor extends BaseTypeVisitor<NetworkRequestAnnotat
                     if (intValAnnoMirror != null) {
                         String intValue =
                                 AnnotationUtils.getElementValueArray(
-                                                intValAnnoMirror, "value", Long.class, true)
+                                                intValAnnoMirror, intValValueElement, Long.class)
                                         .get(0)
                                         .toString();
                         res.add(String.format("%s: %s", argumentType, intValue));
