@@ -39,7 +39,7 @@ dependencies {
 	}
 	implementation configurations.localDeps
 
-	compileOnly "com.google.errorprone:javac:9+181-r4173-1"
+	compileOnly "com.google.errorprone:javac:1+"
 
 	// Testing
 	testImplementation "junit:junit:4.13"
