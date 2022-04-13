@@ -2,6 +2,8 @@ plugins {
 	id "java"
 	id "maven-publish"
 	id "com.diffplug.gradle.spotless" version "3.26.1"
+	// https://github.com/tbroyer/gradle-errorprone-plugin
+	id 'net.ltgt.errorprone' version '2.0.2'
 }
 
 repositories {
@@ -12,6 +14,7 @@ repositories {
 }
 
 configurations {
+	javacJar
 	// for putting Error Prone javac in bootclasspath for running tests
 	errorproneJavac
 	// local dependency
@@ -20,6 +23,8 @@ configurations {
 
 ext.versions = [
 	checkerFramework: "3.21.4-eisop1",
+	errorproneJavacVersion: "9+181-r4173-1",
+	errorproneCoreVersion: "2.11.0",
 ]
 
 
@@ -39,13 +44,17 @@ dependencies {
 	}
 	implementation configurations.localDeps
 
-	compileOnly "com.google.errorprone:javac:9+181-r4173-1"
+	if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
+		javacJar group: 'com.google.errorprone', name: 'javac', version: "${versions.errorproneJavacVersion}"
+	}
+	errorprone "com.google.errorprone:error_prone_core:${versions.errorproneCoreVersion}"
+	errorproneJavac "com.google.errorprone:javac:${versions.errorproneJavacVersion}"
 
 	// Testing
 	testImplementation "junit:junit:4.13.2"
-	testCompile "io.github.eisop:framework-test:${versions.checkerFramework}"
-	testCompile "org.apache.httpcomponents:httpclient:4.5.13"
-	testCompile "org.springframework:spring-web:5.3.18"
+	testImplementation "io.github.eisop:framework-test:${versions.checkerFramework}"
+	testImplementation "org.apache.httpcomponents:httpclient:4.5.13"
+	testImplementation "org.springframework:spring-web:5.3.18"
 
 	errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
 }
@@ -66,10 +75,6 @@ sourceSets {
 			srcDirs = ["src/test/java"]
 		}
 	}
-}
-
-tasks.withType(JavaCompile).all {
-	options.compilerArgs.add("-Xlint:all")
 }
 
 spotless {
@@ -137,6 +142,40 @@ afterEvaluate {
 						"Skipped: ${result.skippedTestCount}, " +
 						"Time elapsed: ${seconds} sec"
 			}
+		}
+	}
+
+	// Code adapted from checker-framework:
+	// https://github.com/eisop/checker-framework/blob/567084f11278273b33289d138d9d2a1b513d3c35/build.gradle#L226
+	tasks.withType(JavaCompile) { compilationTask ->
+		sourceCompatibility = 8
+		targetCompatibility = 8
+		options.failOnError = true
+		options.deprecation = true
+		options.compilerArgs += [
+				'-g',
+				'-Werror',
+				"-Xlint:all",
+		]
+		options.encoding = 'UTF-8'
+		options.fork = true
+		if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
+			options.forkOptions.jvmArgs += ["-Xbootclasspath/p:${configurations.javacJar.asPath}".toString()]
+			options.errorprone.enabled = false
+		} else {
+			options.errorprone.enabled = true
+			options.forkOptions.jvmArgs += [
+					'--add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED',
+					'--add-exports=jdk.compiler/com.sun.tools.javac.file=ALL-UNNAMED',
+					'--add-exports=jdk.compiler/com.sun.tools.javac.main=ALL-UNNAMED',
+					'--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED',
+					'--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED',
+					'--add-exports=jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED',
+					'--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED',
+					'--add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED',
+					'--add-opens=jdk.compiler/com.sun.tools.javac.code=ALL-UNNAMED',
+					'--add-opens=jdk.compiler/com.sun.tools.javac.comp=ALL-UNNAMED',
+			]
 		}
 	}
 }
