@@ -11,7 +11,7 @@ public enum NetworkRequestArgumentTypes {
     PROTOCOL("PROTOCOL"),
     RELATIVEURL("RELATIVEURL");
 
-    private final String value;
+    private String value;
 
     NetworkRequestArgumentTypes(String value) {
         this.value = value;
