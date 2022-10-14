@@ -103,7 +103,7 @@ public class NetworkRequestVisitor extends BaseTypeVisitor<NetworkRequestAnnotat
             AnnotatedDeclaredType invocation,
             AnnotatedExecutableType constructor,
             NewClassTree newClassTree) {
-        Element ele = TreeUtils.elementFromTree(newClassTree);
+        Element ele = TreeUtils.elementFromUse(newClassTree);
         AnnotationMirror networkAnnoMirror =
                 atypeFactory.getDeclAnnotation(ele, NetworkRequest.class);
         if (networkAnnoMirror != null) {
