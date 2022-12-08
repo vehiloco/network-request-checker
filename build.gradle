@@ -51,7 +51,7 @@ dependencies {
 	// Testing
 	testImplementation "junit:junit:4.13.2"
 	testImplementation "io.github.eisop:framework-test:${versions.checkerFramework}"
-	testImplementation "org.apache.httpcomponents:httpclient:4.5.13"
+	testImplementation "org.apache.httpcomponents:httpclient:4.5.14"
 	testImplementation "org.springframework:spring-web:5.3.18"
 
 	errorproneJavac "com.google.errorprone:javac:9+181-r4173-1"
