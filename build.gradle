@@ -136,7 +136,7 @@ test {
 }
 
 test.dependsOn(":assemble")
-assemble.dependsOn(":clean", ":spotlessApply")
+assemble.dependsOn(":clean")
 
 afterEvaluate {
     // Configure JUnit tests
