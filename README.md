@@ -39,3 +39,10 @@ tests/networkrequest/UrlTest.java:14: error: [network.request.found] Found possi
                    ^
 3 errors
 ```
+
+## Development notes
+
+When updating the Checker Framework version, make sure to use the same version
+across all `build.gradle` files.
+
+Run `./gradlew :spotlessApply` to reformat the source code.

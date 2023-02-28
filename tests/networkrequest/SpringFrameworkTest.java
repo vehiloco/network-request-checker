@@ -1,10 +1,10 @@
-import org.springframework.web.client.RestTemplate;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import java.util.Arrays;
 import java.net.URI;
+import java.util.Arrays;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestTemplate;
 
 class SpringFrameworkTest {
     void a() throws Exception {

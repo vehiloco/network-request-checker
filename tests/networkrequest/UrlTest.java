@@ -1,6 +1,5 @@
-import java.net.URL;
 import java.net.MalformedURLException;
-
+import java.net.URL;
 
 public class UrlTest {
     void a() throws MalformedURLException {
@@ -9,6 +8,7 @@ public class UrlTest {
         // :: error: network.request.found
         URL url2 = new URL("http", "example.com", 80, "pages/page1.html");
     }
+
     void b(String url) throws MalformedURLException {
         // :: error: network.request.found
         URL url3 = new URL(url);
