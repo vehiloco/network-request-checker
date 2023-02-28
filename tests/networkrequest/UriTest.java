@@ -1,6 +1,5 @@
 import java.net.URI;
 
-
 public class UriTest {
     static final String str = "https://www.example.com";
 
@@ -10,10 +9,12 @@ public class UriTest {
         // :: error: network.request.found.in.method.invocation
         URI uri2 = URI.create(str);
     }
+
     void b() throws Exception {
         // :: error: network.request.found.in.method.invocation
         URI.create(str);
     }
+
     void c() throws Exception {
         // TODO This should be reported, rather than line 15.
         b();
