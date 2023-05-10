@@ -1,11 +1,12 @@
 package org.checkerframework.checker.networkrequest;
 
-import java.lang.annotation.Annotation;
-import java.util.Collection;
 import org.checkerframework.common.basetype.BaseAnnotatedTypeFactory;
 import org.checkerframework.common.basetype.BaseTypeChecker;
 import org.checkerframework.framework.type.QualifierHierarchy;
 import org.checkerframework.framework.type.SubtypeIsSubsetQualifierHierarchy;
+
+import java.lang.annotation.Annotation;
+import java.util.Collection;
 
 public class NetworkRequestAnnotatedTypeFactory extends BaseAnnotatedTypeFactory {
 
