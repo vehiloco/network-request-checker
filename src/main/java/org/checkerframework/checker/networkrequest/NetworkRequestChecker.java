@@ -1,8 +1,9 @@
 package org.checkerframework.checker.networkrequest;
 
-import java.util.LinkedHashSet;
 import org.checkerframework.common.basetype.BaseTypeChecker;
 import org.checkerframework.common.value.ValueChecker;
+
+import java.util.LinkedHashSet;
 
 /** This is the entry point for pluggable type-checking. */
 public class NetworkRequestChecker extends BaseTypeChecker {
