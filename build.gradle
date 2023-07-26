@@ -17,8 +17,8 @@ plugins {
 }
 
 repositories {
-    mavenLocal()
     mavenCentral()
+    mavenLocal()
 }
 
 configurations {
@@ -35,26 +35,36 @@ ext.versions = [
     errorproneCoreVersion: "2.19.1",
 ]
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+}
 
-sourceCompatibility = 1.8
 def checkerframework_local = false  // Set this variable to [true] while using local version of checker framework.
+def CHECKERFRAMEWORK = System.getenv("CHECKERFRAMEWORK")
 
 ext {
     isJava11plus = JavaVersion.current() >= JavaVersion.VERSION_11
 }
 
+
 dependencies {
     // This dependency is found on compile classpath of this component and consumers.
+    // TODO: clean up implementation/localDeps duplication.
     if (checkerframework_local) {
+        if (CHECKERFRAMEWORK == null) {
+            CHECKERFRAMEWORK = "../checker-framework/"
+        }
         implementation files("${CHECKERFRAMEWORK}/checker/dist/checker-qual.jar")
+        implementation files("${CHECKERFRAMEWORK}/checker/dist/checker.jar")
         localDeps files("${CHECKERFRAMEWORK}/checker/dist/checker.jar")
-        implementation files("${CHECKERFRAMEWORK}/checker/dist/jdk8.jar")
     } else {
+        implementation "io.github.eisop:checker:${versions.checkerFramework}"
         localDeps "io.github.eisop:checker:${versions.checkerFramework}"
+        implementation "io.github.eisop:checker-qual:${versions.checkerFramework}"
         localDeps "io.github.eisop:checker-qual:${versions.checkerFramework}"
+        implementation "io.github.eisop:checker-util:${versions.checkerFramework}"
         localDeps "io.github.eisop:checker-util:${versions.checkerFramework}"
     }
-    implementation configurations.localDeps
 
     if (JavaVersion.current() == JavaVersion.VERSION_1_8) {
         javacJar group: 'com.google.errorprone', name: 'javac', version: "${versions.errorproneJavacVersion}"
@@ -82,6 +92,7 @@ sourceSets {
             exclude "**/*.java"
         }
     }
+
     test {
         java {
             srcDirs = ["src/test/java"]
@@ -96,9 +107,9 @@ if (isJava11plus) {
         java {
             target "src/**/*.java", "tests/**/*.java"
             googleJavaFormat().aosp()
+            formatAnnotations()
             removeUnusedImports()
             importOrder('com', 'jdk', 'lib', 'lombok', 'org', 'java', 'javax')
-            formatAnnotations()
         }
         format "misc", {
             target "**/.gitignore"
@@ -116,16 +127,25 @@ if (isJava11plus) {
     }
 }
 
-// Add `mavenLocal()` in `repositories`, then run `./gradlew publishToMavenLocal`
-// to publish your checker to your local Maven repository.
+
+// Run `./gradlew publishToMavenLocal` to publish your checker to your local Maven repository.
 publishing {
     publications {
         maven(MavenPublication) {
             groupId = "io.github.eisop"
             artifactId = "network-request-checker"
             version = "0.1-SNAPSHOT"
-
             from components.java
+            if (checkerframework_local) {
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode('dependencies')
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode("groupId", "io.github.eisop")
+                    dependencyNode.appendNode("artifactId", "checker")
+                    dependencyNode.appendNode("version", "${versions.checkerFramework}")
+                    dependencyNode.appendNode("systemPath", projectDir.toString() + "$buildDir/libs/checker.jar")
+                }
+            }
         }
     }
 }
@@ -219,4 +239,8 @@ test.doLast {
 task copyDependencies(type: Copy) {
     from configurations.localDeps
     into "$buildDir/libs"
+}
+
+task printLocalCheckerFrameworkPath() {
+    println CHECKERFRAMEWORK
 }
