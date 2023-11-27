@@ -28,7 +28,7 @@ public class NetworkRequestAnnotatedTypeFactory extends BaseAnnotatedTypeFactory
          */
         public NetworkRequestQualifierHierarchy(
                 Collection<Class<? extends Annotation>> qualifierClasses) {
-            super(qualifierClasses, processingEnv);
+            super(qualifierClasses, processingEnv, NetworkRequestAnnotatedTypeFactory.this);
         }
     }
 }
