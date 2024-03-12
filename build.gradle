@@ -32,7 +32,7 @@ configurations {
 ext.versions = [
     checkerFramework: "3.42.0-eisop3",
     errorproneJavacVersion: "9+181-r4173-1",
-    errorproneCoreVersion: "2.25.0",
+    errorproneCoreVersion: "2.26.0",
 ]
 
 java {
