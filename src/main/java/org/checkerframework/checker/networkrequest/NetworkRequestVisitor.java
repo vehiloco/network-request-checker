@@ -98,7 +98,7 @@ public class NetworkRequestVisitor extends BaseTypeVisitor<NetworkRequestAnnotat
                         null);
             }
         }
-        return super.visitMethodInvocation(node, p);
+        return super.visitMethodInvocation(node, null);
     }
 
     @Override
