@@ -7,7 +7,7 @@ repositories {
 }
 
 ext.versions = [
-    checkerFramework: "3.42.0-eisop3",
+    checkerFramework: "3.42.0-eisop4",
 ]
 
 dependencies {
