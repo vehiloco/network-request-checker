@@ -13,7 +13,7 @@ plugins {
     id "java"
     id "maven-publish"
     // https://github.com/tbroyer/gradle-errorprone-plugin
-    id 'net.ltgt.errorprone' version '4.0.1'
+    id 'net.ltgt.errorprone' version '4.1.0'
 }
 
 repositories {
