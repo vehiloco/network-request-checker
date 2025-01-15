@@ -1,6 +1,7 @@
 import java.net.MalformedURLException;
 import java.net.URL;
 
+@SuppressWarnings("deprecation")
 public class UrlTest {
     void a() throws MalformedURLException {
         // :: error: network.request.found
