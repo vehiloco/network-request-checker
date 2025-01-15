@@ -7,7 +7,7 @@ repositories {
 }
 
 ext.versions = [
-    checkerFramework: "3.42.0-eisop4",
+    checkerFramework: "3.42.0-eisop5",
 ]
 
 dependencies {
@@ -27,7 +27,12 @@ task copySources(type: Copy) {
     include '**/org/checkerframework/checker/networkrequest/qual/**'
 
     // Make files read only.
-    fileMode(0444)
+    filePermissions {
+        user {
+            read = true
+            write = false
+        }
+    }
 
     into file('src/main/java')
 }

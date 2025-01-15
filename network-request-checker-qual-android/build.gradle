@@ -7,7 +7,7 @@ repositories {
 }
 
 ext.versions = [
-    checkerFramework: "3.42.0-eisop4",
+    checkerFramework: "3.42.0-eisop5",
 ]
 
 dependencies {
@@ -16,7 +16,7 @@ dependencies {
 }
 
 task copySources(type: Copy, dependsOn: ':network-request-checker-qual:copySources') {
-    description 'Copy network-request-checker-qual source to network-request-checker-qual-android'
+    description = 'Copy network-request-checker-qual source to network-request-checker-qual-android'
 
     includeEmptyDirs = false
     doFirst {
@@ -28,8 +28,19 @@ task copySources(type: Copy, dependsOn: ':network-request-checker-qual:copySourc
     into file('src/main')
 
     // Not read only because "replaceAnnotations" tasks writes to the files.
-    fileMode(0666)
-    dirMode(0777)
+    filePermissions {
+        user {
+            read = true
+            write = true
+        }
+    }
+    dirPermissions {
+        user {
+            read = true
+            write = true
+            execute = true
+        }
+    }
 }
 
 /**
