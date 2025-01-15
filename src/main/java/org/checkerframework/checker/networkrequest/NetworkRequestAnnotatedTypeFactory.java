@@ -10,6 +10,7 @@ import java.util.Collection;
 
 public class NetworkRequestAnnotatedTypeFactory extends BaseAnnotatedTypeFactory {
 
+    @SuppressWarnings("this-escape")
     public NetworkRequestAnnotatedTypeFactory(BaseTypeChecker checker) {
         super(checker);
         this.postInit();
